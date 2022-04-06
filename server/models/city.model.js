@@ -18,7 +18,7 @@ const CitySchema = new mongoose.Schema({
         type: String,
         //An enum will require this field's value in the request to 
         //include one of these values EXACTLY as typed here
-        required: [true, "A city's weather is required!!!"],
+        //required: [true, "A city's weather is required!!!"],
         enum:[
             "Windy",
             "Snowy",
@@ -34,17 +34,21 @@ const CitySchema = new mongoose.Schema({
         type: String,
         //The messages from validators will be accessible after we set our
     //res.status(400).json(err) in our controller
-        required: [true, "Because pictures make it unforgettable!!!"]
+        //required: [true, "Because pictures make it unforgettable!!!"]
     },
 
     petFriendly:{
         type: Boolean,
-        required:[true, "Need to know if this city's good for pets!!!"]
+        //required:[true, "Need to know if this city's good for pets!!!"]
     },
 
     yearBuilt:{
         type: Number,
         min:[50, "We dont like old cities"]
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     }
 
 }, {timestamps:true})

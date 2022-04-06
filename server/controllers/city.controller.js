@@ -1,10 +1,11 @@
 const City = require("../models/city.model");
+const jwt = require ("jsonwebtoken")
 
     module.exports = {
 
         findAllCities: (req, res)=>{
-            City.find({}).collation({ locale: "en" }).sort({ type: 1 })
-            //Pet.find()
+            City.find({})
+                .populate("createdBy", "username email")
                 .then((allCities)=>{
                     console.log(allCities);
                     res.json(allCities)
@@ -15,8 +16,24 @@ const City = require("../models/city.model");
                 })
         },
 
+        // createNewCity: (req, res)=>{
+        //     City.create(req.body)
+        //         .then((newCity)=>{
+        //             console.log(newCity);
+        //             res.json(newCity);
+        //         })
+        //         .catch((err)=>{
+        //             console.log("Something went wrong in createNewCity()");
+        //             res.status(400).json(err)
+        //         })
+        // },
         createNewCity: (req, res)=>{
-            City.create(req.body)
+            const newCityObject = new City(req.body)
+            const decodedJWT = jwt.decode(req.cookies.usertoken, {complete: true})
+
+            newCityObject.createdBy = decodedJWT.payload.id;
+            newCityObject.save()
+    
                 .then((newCity)=>{
                     console.log(newCity);
                     res.json(newCity);
