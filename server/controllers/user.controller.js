@@ -87,11 +87,12 @@ module.exports = {
 
         getLoggedInUser: (req, res)=>{
 
-            const decodedJWT = jwt.decode(req.cookies.usertoken,{
-                complete: true
-            })
+            // const decodedJWT = jwt.decode(req.cookies.usertoken,{
+            //     complete: true
+            // })
+
     
-            User.findOne({_id: decodedJWT.payload.id})
+            User.findOne({_id: req.jwtpayload.id})
                 .then((user)=>{
                     console.log(user);
                     res.json(user)
@@ -99,6 +100,19 @@ module.exports = {
                 .catch((err)=>{
                     console.log(err);
                 })
-            }
+            },
+        
+            findAllUsers: (req, res) => {
+                //use the model to connect to the collection and 
+                //find/return all documents from our games collection  
+                User.find()
+                    .then((allUsers) => {
+                        res.json(allUsers);
+                    })
+                    .catch((err) => {
+                        console.log("Find All Users failed");
+                        res.json({ message: "Something went wrong in findAll", error: err })
+                    })
+            },
     
 }

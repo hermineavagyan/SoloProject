@@ -81,7 +81,45 @@ const jwt = require ("jsonwebtoken")
                     console.log("Something went wrong in updateCity()");
                     res.status(400).json(err) 
                 })
+        },
+        findAllCitiesByUser: (req, res)=>{
+
+            if(req.jwtpayload.username !== req.params.username){
+                console.log("not the user");
+
+                User.findOne({username: req.params.username})
+                    .then((userNotLoggedIn)=>{
+                        City.find({createdBy: userNotLoggedIn._id})
+                            .populate("createdBy", "username")
+                            .then((allCitiesFromUser)=>{
+                                console.log(allCitiesFromUser);
+                                res.json(allCitiesFromUser);
+                            })
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        res.status(400).json(err);
+                    })
+            }
+
+            else{
+                console.log("current user")
+                console.log("req.jwtpayload.id:", req.jwtpayload.id);
+                City.find({ createdBy: req.jwtpayload.id })
+                    .populate("createdBy", "username")
+                    .then((allCitiesFromLoggedInUser) => {
+                        console.log(allCitiesFromLoggedInUser);
+                        res.json(allCitiesFromLoggedInUser);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        res.status(400).json(err);
+                    })
+            }
+
         }
+
+
 
 
     }

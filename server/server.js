@@ -14,7 +14,8 @@ app.use(express.urlencoded({extended:true}))
 //A built into the browser feature that 
 //takes care of cross origin resource sharing
 app.use(cors({
-    origin: "http://localhost:3000"
+    origin: "http://localhost:3000",
+    credentials: true
 }))
 app.use(cookieParser())
 
